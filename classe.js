@@ -5,7 +5,6 @@ class Product {
         this.promotion = promotion
         this.discount = discount
     }
-    affichePromo() {
-    }
+    
 }
 
