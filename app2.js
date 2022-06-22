@@ -1,4 +1,3 @@
-
 //  var=[] et ensuite push pour "mettre" les 5 produits dans un tabelau products
 let products = []
 let cd1 = new Product('Michaël Gregorio', '43,00', 'non', 'non', 'musique')
@@ -93,8 +92,20 @@ let tabProd = document.querySelector('.tabprod');
 // var index "vide" pour pouvoir la réutiliser sans toutes les fonctions et listener
 let index = ""
 
+
 // event au 'change' pour que à la selection d'un produit dans le select, ça lance la fonction modifprod
 selectProd.addEventListener('change', modifprod);
+// Pas demandé: listener et fonctions pour que au clic dans l'input promotion et remise du formulaire, il devienne vide sans avoir à effacer
+promo.addEventListener('click', effacepromo);
+remise.addEventListener('click', effaceremise);
+// entre les deux je modifie les valeurs promotion ou remise dans le formulaire apparu
+// au clic sur le btn valide du formulaire on lance:
+btnValid.addEventListener('click', modifPromoRemise);
+
+
+
+
+// Fonctions
 function modifprod() {
     // on reprend la var index "" et lui dit de prendre la value du produit qu'on va select. Donc [0] pour le 1er etc....Càd les values qu'on a mis sur chaque ligne du select html.
     index = selectProd.value;
@@ -102,38 +113,35 @@ function modifprod() {
     nomProd.value = products[index].name;
     promo.value = products[index].promotion;
     remise.value = products[index].discount;
+    popUpForm();
+}
+function popUpForm() {
     form.style.display = 'block';
 }
-
-// Pas demandé: listener et fonctions pour que au clic dans l'input promotion et remise du formulaire, il devienne vide sans avoir à effacer
-promo.addEventListener('click', effacepromo);
 function effacepromo() {
     promo.value = "";
 }
-
-remise.addEventListener('click', effaceremise);
 function effaceremise() {
     remise.value = "";
 }
-
-// entre les deux je modifie les valeurs promotion ou remise dans le formulaire apparu
-
-// au clic sur le btn valide du formulaire on lance:
-btnValid.addEventListener('click', modifPromoRemise);
 function modifPromoRemise() {
-
-// même chose en sens inverse pour que la modif soit bien prise en compte. Càd que promo.value et remise.value ont pris la nouvelle valeur saisie
+    // même chose en sens inverse pour que la modif soit bien prise en compte. Càd que promo.value et remise.value ont pris la nouvelle valeur saisie
     products[index].name = nomProd.value;
     products[index].promotion = promo.value;
     products[index].discount = remise.value;
     if (promo.value != 'oui' && promo.value != 'non') {
         alert(' veuillez selectionner oui ou non')
+        productshtml = `<tr><td>${nomProd.value}</td><td>${category}</td><td>${price}</td><td>${promo.value}</td><td>${remise.value}</td><td>${montantDeduit}</td></tr>`;
+        tabProd.innerHTML = productshtml;
     }
-    if (remise.value <=0 || remise.value > 99) {
+    if (remise.value <= 0 || remise.value > 99) {
         alert('veuillez saisir un montant entre 1 et 99')
         productshtml = `<tr><td>${nomProd.value}</td><td>${category}</td><td>${price}</td><td>${promo.value}</td><td>${remise.value}</td><td>${montantDeduit}</td></tr>`;
-    tabProd.innerHTML = productshtml;
+        tabProd.innerHTML = productshtml;
     }
+    calculPrixFinal();
+}
+function calculPrixFinal() {
     //    Pas demandé, mais pour tout réafficher, faire un joli tableau
     category = products[index].category;
     price = products[index].price;
@@ -145,9 +153,8 @@ function modifPromoRemise() {
     // enfin pour réafficher le produit modifié dans le tableau à l'ecran. En mettant bien cette fois les nouvelles var définies juste avant (ex promo.value)
     productshtml = `<tr><td>${nomProd.value}</td><td>${category}</td><td>${price}</td><td>${promo.value}</td><td>${remise.value}</td><td>${montantDeduit}</td></tr>`;
     tabProd.innerHTML = productshtml;
+    popDownForm();
+}
+function popDownForm() {
     form.style.display = 'none';
 }
-
-
-
-
